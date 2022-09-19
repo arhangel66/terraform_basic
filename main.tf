@@ -3,8 +3,10 @@ terraform {
     // Здесь указываются все провайдеры, которые будут использоваться
     digitalocean = {
       source = "digitalocean/digitalocean"
-      // Версия может обновиться
       version = "~> 2.0"
+    }
+    datadog = {
+      source = "DataDog/datadog"
     }
   }
 }
@@ -13,15 +15,24 @@ terraform {
 
 // Определение переменной, которую нужно будет задать
 variable "do_token" {}
+variable "datadog_api_key" {}
+variable "datadog_app_key" {}
 
 // Установка значения переменной
 provider "digitalocean" {
   token = var.do_token
 }
 
+provider "datadog" {
+  api_key = var.datadog_api_key
+  app_key = var.datadog_app_key
+  api_url = "https://api.datadoghq.eu/"
+}
+
+
 
 resource "digitalocean_droplet" "web" {
-  name   = "web-1"
+  name   = "web-nginx"
   size   = "s-1vcpu-1gb"
   image  = "nginx"
   region = "nyc3"
