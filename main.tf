@@ -26,13 +26,20 @@ provider "digitalocean" {
 provider "datadog" {
   api_key = var.datadog_api_key
   app_key = var.datadog_app_key
-  api_url = "https://api.datadoghq.eu/"
+  api_url = var.datadog_api_url
 }
 
 
 
 resource "digitalocean_droplet" "web" {
   name   = "web-nginx"
+  size   = "s-1vcpu-1gb"
+  image  = "nginx"
+  region = "nyc3"
+}
+
+resource "digitalocean_droplet" "web2" {
+  name   = "web-nginx2"
   size   = "s-1vcpu-1gb"
   image  = "nginx"
   region = "nyc3"
@@ -55,5 +62,5 @@ resource "digitalocean_loadbalancer" "public" {
     protocol = "tcp"
   }
 
-  droplet_ids = [digitalocean_droplet.web.id]
+  droplet_ids = [digitalocean_droplet.web.id, digitalocean_droplet.web2.id]
 }
